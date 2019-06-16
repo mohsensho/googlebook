@@ -1,5 +1,5 @@
 {
-  "name": "react-google-books",
+  "name": "google-book",
   "version": "1.0.0",
   "description": "React Google Books Search",
   "engines": {
@@ -16,7 +16,7 @@
     "lint": "eslint",
     "heroku-postbuild": "npm run build"
   },
-  "author": "",
+  "author": "Mohsen Shojaeifar",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^4.1.0",
@@ -38,7 +38,15 @@
     "if-env": "^1.0.4",
     "mongoose": "^5.3.16",
     "morgan": "^1.9.1",
-	"jest": "20.0.4",
+    "jest": "20.0.4",
     "jest-cli": "20.0.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohsensho/googlebook.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mohsensho/googlebook/issues"
+  },
+  "homepage": "https://github.com/mohsensho/googlebook#readme"
 }
