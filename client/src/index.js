@@ -1,34 +1,15 @@
-import React from 'react';
-import { render } from 'react-dom';
-import './styles/styles.scss';
-import { App } from './components/App';
+import React from "react";
+import ReactDOM from "react-dom";
+import Root from "./root";
+import configureStore from "./store";
+import * as serviceWorker from "./serviceWorker";
 
-window.React = React;
+ReactDOM.render(
+  <Root store={configureStore()} />,
+  document.getElementById("root")
+);
 
-render(
-	<App />,
-  document.getElementById('reactTarget')
-)
-
-// Check for browser support of service worker
-if ('serviceWorker' in navigator) {
- navigator.serviceWorker.register('./service-worker.js')
- .then(function(registration) {
-   // Successful registration
-   console.log('Hooray. Registration successful, scope is:', registration.scope);
-
- }).catch(function(err) {
-   // Failed registration, service worker won’t be installed
-   console.log('Whoops. Service worker registration failed, error:', err);
-    
-
- });
-}
-
-document.addEventListener('scroll', function (event) {
-    if (document.body.scrollHeight ===
-        document.body.scrollTop +        
-        window.innerHeight) {
-        
-    }
-});
+// If you want your app to work offline and load faster, you can change
+// unregister() to register() below. Note this comes with some pitfalls.
+// Learn more about service workers: http://bit.ly/CRA-PWA
+serviceWorker.unregister();

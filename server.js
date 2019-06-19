@@ -1,103 +1,61 @@
-const cors = require('cors-express');
-const express = require('express');
+const express = require("express");
+const path = require("path");
+
 const app = express();
-const bodyParser = require('body-parser');
-const path = require('path');
-const PORT = process.env.PORT || 8080;
-const options = {
-      allow : {
-          origin: '*',
-          methods: 'GET,PATCH,PUT,POST,DELETE,HEAD,OPTIONS',
-          headers: 'Content-Type, Authorization, Content-Length, X-Requested-With, X-HTTP-Method-Override'
-      } 
-    }
-//require db connection
-require('./models');
+const axios = require("axios");
+require("dotenv").config();
 
-// import favorite db
-const Favorite = require('./favorite');
+// -------------------------------  MONGODB  ------------------------------
+const mongoose = require("mongoose");
 
+const dbName = "reactGoogleBooks";
+const MONGODB_URI = process.env.MONGODB_URI || `mongodb://localhost/${dbName}`;
+const db = require("./db/models")(mongoose);
 
-app.use(cors(options));
-// configure app to use bady parser to extract JSON from POST
-app.use(bodyParser.urlencoded({ extended : true }));
-app.use(bodyParser.json());
+mongoose.connect(
+  MONGODB_URI,
+  { useNewUrlParser: true }
+);
 
-// Make static assets available to UI
-app.use(express.static('./client/build'));
-// app.use(express.static('./client/build'));
+// -----------------------------  MIDDLEWARE  -----------------------------
+// Define middleware here
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(require("morgan")("dev"));
+app.use(require("compression")());
+app.use(require("helmet")());
 
-const router = express.Router();
-// Serve the UI over express server
-router.get('/', function(req, res){
-  res.sendFile(path.join(__dirname, './client/public/index.html'))
+// Serve up static assets (usually on heroku)
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
+
+// -----------------------------  API ROUTES  -----------------------------
+const { GOOGLE_API_SERVER_KEY } = process.env;
+const apiRouter = express.Router();
+require("./routes")(apiRouter, db, axios, GOOGLE_API_SERVER_KEY);
+
+app.use("/api", apiRouter);
+
+// Send every other request to the React app
+// Define any API routes before this runs
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "./client/build/index.html"));
 });
 
-//Initialize API
-router.get('/api', function(req, res){
-  res.send('API initialized');
-})
-
-//Register API routes
-app.use('/api', router);
-
-// Route for all records in collection
-router.route('/favorites')
-
-  // Add a favortie entry to the database
-  .post(function(req, res){
-    // Create an entry
-    const favorite = new Favorite();
-    favorite.title = req.body.title,
-    favorite.authors = req.body.authors,
-    favorite.rating = req.body.rating,
-    favorite.publisher = req.body.publisher,
-    favorite.publishedDate = req.body.publishedDate,
-    description = req.body.description,
-    favorite.thumbnail = req.body.thumbnail,
-    favorite.price = req.body.price,
-    favorite.purchase = req.body.purchase;
-
-    // Save the entry and check for errors
-    favorite.save(function(err){
-      if(err) {
-        res.send(err);
-      } else {
-        res.json({
-          message: 'Favorite added',
-          favorite: favorite
-        });
-      }
-    })    
-  })
-  
-  // Retrieve all favorites from the database
-    .get(function(req, res){
-      Favorite.find(function(err, favorites){
-        if(err){
-          res.send(err);
-        } else {
-          res.json(favorites);
-        }
-      });
-    })
-
-// Route for specific records
-router.route('/favorites/:id')
-
-    // Remove a record permanently
-    .delete(function(req, res) {
-        Favorite.remove({_id: req.params.id}, function(err){
-          if(err){
-            res.send(err);
-          } else {
-            res.send("Record Removed");
-          }
-        })
-        res.status(204).end();
-    })
-
-// Start the API server
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-	console.log(`Server listening on port ${PORT}.`);
+  console.log(`🌎 ==> Server now on port ${PORT}!`);
 });
+
+const sampleBook = {
+  title: "The Hunger Games",
+  authors: ["Suzanne Collins"],
+  description:
+    "Set in a dark vision of the near future, a terrifying reality TV show is taking place. Twelve boys and twelve girls are forced to appear in a live event called The Hunger Games. There is only one rule: kill or be killed. When sixteen-year-old Katniss Everdeen steps forward to take her younger sister's place in the games, she sees it as a death sentence. But Katniss has been close to death before. For her, survival is second nature.",
+  image:
+    "http://books.google.com/books/content?id=sazytgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api",
+  link:
+    "http://books.google.com/books?id=sazytgAACAAJ&dq=title:The+Hunger+Games&hl=&source=gbs_api",
+};
