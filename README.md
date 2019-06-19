@@ -1,19 +1,29 @@
-# React GBooks
+# Create React Express App
 
-A MERN app that allows users to search for books using the Google Books API and save any book to a database. Users can also delete any saved books.
+## About This Boilerplate
 
-Click [here](https://react-gbooks.herokuapp.com) to view the implementation on Heroku.
+This setup allows for a Node/Express/React app which can be easily deployed to Heroku.
 
-## Usage
+The front-end React app will auto-reload as it's updated via webpack dev server, and the backend Express app will auto-reload independently with nodemon.
 
-1. Search for a book using the search bar.
-2. Save any book of interest.
-3. Go to the Saved tab to view all your saved books and delete any if necessary.
+## Starting the app locally
 
-## Future Development
+Start by installing front and backend dependencies. While in this directory, run the following command:
 
-- Add infinte scrolling
+```
+yarn install
+```
 
-## Authors
+This should install node modules within the server and the client folder.
 
-- **Calvin Ho** - [calvh](https://github.com/calvh)
+After both installations complete, run the following command in your terminal:
+
+```
+yarn start
+```
+
+Your app should now be running on <http://localhost:3000>. The Express server should intercept any AJAX requests from the client.
+
+## Deployment (Heroku)
+
+To deploy, simply add and commit your changes, and push to Heroku. As is, the NPM scripts should take care of the rest.
