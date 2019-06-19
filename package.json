@@ -1,13 +1,13 @@
 {
-  "name": "googlebooksearch",
+  "name": "NYT-GoogleBooks",
   "version": "1.0.0",
-  "description": "Full stack react app that uses google books api to search for books and saves them to a mongo database.  Allows users to favorite any book and also proves a link to buy the book.",
+  "description": "",
   "private": true,
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
-  },
-  "author": "Mohsen SHojaeifar",
+	"start": "node server.js"
+	},
+  "author": "",
   "license": "ISC",
   "devDependencies": {
     "babel-preset-env": "^1.7.0",
@@ -16,7 +16,7 @@
     "nodemon": "^1.12.0"
   },
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.16.2",
     "concurrently": "^4.1.0",
     "cors-express": "^0.2.2",
     "dotenv": "^6.1.0",
@@ -27,13 +27,5 @@
     "mongoose": "^5.3.14",
     "node-sass": "^4.10.0",
     "react-icons": "^3.2.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mohsensho/googlebook.git"
-  },
-  "bugs": {
-    "url": "https://github.com/mohsensho/googlebook/issues"
-  },
-  "homepage": "https://github.com/mohsensho/googlebook#readme"
+  }
 }
